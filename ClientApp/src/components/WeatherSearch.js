@@ -3,7 +3,7 @@
 
 
 
-const Button = () => {
+const Search = () => {
     const [coordinates, setCoordinates] = useState({ lan: "", lon: "" })
 
 
@@ -50,7 +50,7 @@ export class WeatherSearch extends Component {
     render() {
         return (
 
-            <Button />
+            <Search />
         );
     }
 }
