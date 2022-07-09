@@ -6,10 +6,10 @@ export class Counter extends Component {
   constructor(props) {
     super(props);
     this.state = { currentCount: 0 };
-    this.incrementCounter = this.incrementCounter.bind(this);
+    
   }
 
-  incrementCounter() {
+  incrementCounter = (e) => {
     this.setState({
       currentCount: this.state.currentCount + 1
     });
