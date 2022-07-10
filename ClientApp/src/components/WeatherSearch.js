@@ -1,4 +1,4 @@
-﻿import React, { Component, useState } from 'react';
+﻿import React, { Component, useState,useEffect } from 'react';
 
 
 
@@ -14,9 +14,16 @@ const Search = () => {
     }
     const handleSubmit = (event) => {
         event.preventDefault();
+   
         alert('A name was submitted: ' + coordinates.lan);
 
     }
+    useEffect(() => {
+        // Update the document title using the browser API
+        GetSearchApiResults();
+    },[]);
+       
+    
     return (
         <form onSubmit={handleSubmit}>
             <label>
@@ -32,7 +39,17 @@ const Search = () => {
     );
 };
 
-
+const GetSearchApiResults = async () => {
+    fetch('WeatherSearch')
+        .then(response => {
+            if (response.ok)
+                response.json()
+            throw response
+        }).then(data => console.log(data)).catch(error => {
+            console.log(error);
+        });
+        
+}
 
 
 
