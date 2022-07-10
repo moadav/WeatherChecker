@@ -18,10 +18,11 @@ namespace WeatherChecker.Controllers
     public class WeatherSearchController : ControllerBase
     {
         HttpClient Client { get; set; } = new HttpClient();
-        List<WeatherTimeseries> JsonResponse { get; set; }
+        List<WeatherCheckerApiResults> WeatherResponse {get; set;} = new List<WeatherCheckerApiResults>();
+
         // GET: <WeatherSearchController>
         [HttpGet]
-        public async IAsyncEnumerable<WeatherTimeseries[]> Get()
+        public async IAsyncEnumerable<List<WeatherCheckerApiResults>> Get()
         {
 
             Client.DefaultRequestHeaders.Accept.Clear();
@@ -39,13 +40,22 @@ namespace WeatherChecker.Controllers
                 response.EnsureSuccessStatusCode();
                 var responsebody = JsonConvert.DeserializeObject<Feature>(await response.Content.ReadAsStringAsync());
 
-                yield return responsebody.Properties.TimeSeries.ToArray();
+          
 
+                foreach(WeatherTimeseries body in responsebody.Properties.TimeSeries)
+                {
+                    WeatherResponse.Add(new WeatherCheckerApiResults
+                    {
+                        Coordinates = responsebody.Geometry.Coordinates,
+                        Time = body.Time,
+                        Air_temperature = body.Data.Instant.Details.Air_temperature,
+                        Wind_speed = body.Data.Instant.Details.Wind_speed,
+                        Wind_from_direction = body.Data.Instant.Details.Wind_from_direction
 
-      
-
+                    });
+                }
             }
-      
+            yield return WeatherResponse;
         }
 
 

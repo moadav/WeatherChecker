@@ -41,13 +41,13 @@ const Search = () => {
 
 const GetSearchApiResults = async () => {
     fetch('WeatherSearch')
-        .then(response => {
-            if (response.ok)
-                response.json()
-            throw response
-        }).then(data => console.log(data)).catch(error => {
-            console.log(error);
-        });
+        .then(response => 
+
+            response.json()
+
+        )
+        .then(data => console.log(data));
+        
         
 }
 
