@@ -4,7 +4,7 @@ import './WeatherSearch.css';
 
 const Search = () => {
     const [coordinates, setCoordinates] = useState({ lan: "", lon: "" });
-    const [values, setValues] = useState({});
+    const [values, setValues] = useState();
 
     const handleChange = (e) => {
 
@@ -27,7 +27,7 @@ const Search = () => {
 
                 response.json()
 
-        ).then(data => setValues(data[0][1]));
+        ).then(data => setValues(data[0][0]));
     }
 
 
@@ -47,8 +47,10 @@ const Search = () => {
                 </label>
                 <input type="submit" value="Submit" />
             </form>
-
-            <WeatherContentBox time={values.time} air_temperature={values.air_temperature} wind_from_direction={values.wind_from_direction} wind_speed={values.wind_speed} symbol_code={values.symbol_code} />
+            {values ? <WeatherContentBox time={values.time} air_temperature={values.air_temperature} wind_from_direction={values.wind_from_direction} wind_speed={values.wind_speed} symbol_code={values.symbol_code} />
+                :
+                null}
+            
         </div>
 
          

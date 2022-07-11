@@ -109,11 +109,11 @@ namespace WeatherChecker.Controllers
 
                     for(int i = 1; i < responsebody.Properties.TimeSeries.Count; i++)
                     {
-
+                        
                         WeatherResponse.Add(new WeatherCheckerApiResults
                         {
                             Coordinates = responsebody.Geometry.Coordinates,
-                            Time = responsebody.Properties.TimeSeries[i].Time,
+                            Time = DateTime.Parse(responsebody.Properties.TimeSeries[i].Time, CultureInfo.CurrentCulture).ToString(),
                             Air_temperature = responsebody.Properties.TimeSeries[i].Data.Instant.Details.Air_temperature,
                             Wind_speed = responsebody.Properties.TimeSeries[i].Data.Instant.Details.Wind_speed,
                             Wind_from_direction = responsebody.Properties.TimeSeries[i].Data.Instant.Details.Wind_from_direction,
