@@ -4,7 +4,7 @@
 
 
 const Search = () => {
-    const [coordinates, setCoordinates] = useState({ lan: "", lon: "" })
+    const [coordinates, setCoordinates] = useState({ lan: "", lon: "" });
 
 
     const handleChange = (e) => {
@@ -14,14 +14,31 @@ const Search = () => {
     }
     const handleSubmit = (event) => {
         event.preventDefault();
-   
+        GetSearchApiResults();
         alert('A name was submitted: ' + coordinates.lan);
+
+    }
+ 
+    const request = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ coordinates })
+    }
+    const GetSearchApiResults = async () => {
+        fetch('WeatherSearch', request)
+            .then(response =>
+
+                response.json()
+
+            )
+            .then(data => console.log(data));
+
 
     }
     useEffect(() => {
         // Update the document title using the browser API
-        GetSearchApiResults();
-    },[]);
+        
+    }, [coordinates]);
        
     
     return (
@@ -37,19 +54,12 @@ const Search = () => {
             <input type="submit" value="Submit" />
         </form>
     );
+  
 };
 
-const GetSearchApiResults = async () => {
-    fetch('WeatherSearch')
-        .then(response => 
 
-            response.json()
 
-        )
-        .then(data => console.log(data));
-        
-        
-}
+
 
 
 

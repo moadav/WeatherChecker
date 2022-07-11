@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using WeatherChecker.ApiDesc;
 using WeatherCheckerApi;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -76,8 +77,48 @@ namespace WeatherChecker.Controllers
 
         // POST <WeatherSearchController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async IAsyncEnumerable<List<WeatherCheckerApiResults>> Post([FromBody] object value)
         {
+            Client.DefaultRequestHeaders.Accept.Clear();
+            Client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
+            Client.DefaultRequestHeaders.Add("User-Agent", "Weather check application");
+
+            var CoordinatesRequest = JsonConvert.DeserializeObject<CoordinatesReact>(value.ToString());
+
+            using (HttpResponseMessage response = await Client.GetAsync($"https://api.met.no/weatherapi/locationforecast/2.0/compact.json?lat={CoordinatesRequest.Coordinates.lan}&lon={CoordinatesRequest.Coordinates.lon}"))
+            {
+                try
+                {
+                    response.EnsureSuccessStatusCode();
+                    var responsebody = JsonConvert.DeserializeObject<Feature>(await response.Content.ReadAsStringAsync());
+
+                    foreach (WeatherTimeseries body in responsebody.Properties.TimeSeries)
+                    {
+                        WeatherResponse.Add(new WeatherCheckerApiResults
+                        {
+                            Coordinates = responsebody.Geometry.Coordinates,
+                            Time = body.Time,
+                            Air_temperature = body.Data.Instant.Details.Air_temperature,
+                            Wind_speed = body.Data.Instant.Details.Wind_speed,
+                            Wind_from_direction = body.Data.Instant.Details.Wind_from_direction
+
+                        });
+                    }
+                }
+                catch (HttpRequestException e)
+                {
+                    Console.WriteLine("error: " + e);
+                }
+
+
+
+
+            }
+            yield return WeatherResponse;
+
+
+
         }
 
         // PUT <WeatherSearchController>/5
