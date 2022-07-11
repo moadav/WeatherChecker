@@ -1,0 +1,12 @@
+﻿.wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 20px;
+    border-radius: 25px;
+    background: #73AD21;
+    margin-top:30vh;
+    margin-left:30vh;
+    width: 50%;
+  
+}

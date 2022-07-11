@@ -1,7 +1,6 @@
-﻿import React, { Component, useState, useEffect } from 'react';
-
-
-
+﻿import React, { Component, useState } from 'react';
+import { WeatherContentBox } from './WeatherContentBox';
+import './WeatherSearch.css';
 
 const Search = () => {
     const [coordinates, setCoordinates] = useState({ lan: "", lon: "" });
@@ -15,8 +14,6 @@ const Search = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
         GetSearchApiResults();
-        alert('A name was submitted: ' + coordinates.lan);
-
     }
 
     const request = {
@@ -30,13 +27,8 @@ const Search = () => {
 
                 response.json()
 
-            )
-            .then(data => setValues(data[0][1]));
+        ).then(data => setValues(data[0][1]));
     }
-    useEffect(() => {
-        // Update the document title using the browser API
-
-    }, [coordinates]);
 
 
     return (
@@ -44,7 +36,7 @@ const Search = () => {
           
            
 
-            <form onSubmit={handleSubmit}>
+            <form className="SubmitForm" onSubmit={handleSubmit}>
                 <label>
                     lon:
                     <input type="text" name="lon" value={coordinates.lon} onChange={handleChange} />
@@ -56,7 +48,7 @@ const Search = () => {
                 <input type="submit" value="Submit" />
             </form>
 
-            <p> {values.symbol_code} </p>
+            <WeatherContentBox time={values.time} air_temperature={values.air_temperature} wind_from_direction={values.wind_from_direction} wind_speed={values.wind_speed} symbol_code={values.symbol_code} />
         </div>
 
          
