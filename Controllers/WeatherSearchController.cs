@@ -74,6 +74,7 @@ namespace WeatherChecker.Controllers
         {
             return "value";
         }
+        string symbole { get; set; }
 
         // POST <WeatherSearchController>
         [HttpPost]
@@ -93,17 +94,34 @@ namespace WeatherChecker.Controllers
                     response.EnsureSuccessStatusCode();
                     var responsebody = JsonConvert.DeserializeObject<Feature>(await response.Content.ReadAsStringAsync());
 
-                    foreach (WeatherTimeseries body in responsebody.Properties.TimeSeries)
+                    //foreach (WeatherTimeseries body in responsebody.Properties.TimeSeries)
+                    //{
+                    //    WeatherResponse.Add(new WeatherCheckerApiResults
+                    //    {
+                    //        Coordinates = responsebody.Geometry.Coordinates,
+                    //        Time = body.Time,
+                    //        Air_temperature = body.Data.Instant.Details.Air_temperature,
+                    //        Wind_speed = body.Data.Instant.Details.Wind_speed,
+                    //        Wind_from_direction = body.Data.Instant.Details.Wind_from_direction
+
+                    //    });
+                    //}
+
+                    for(int i = 1; i < responsebody.Properties.TimeSeries.Count; i++)
                     {
+
                         WeatherResponse.Add(new WeatherCheckerApiResults
                         {
                             Coordinates = responsebody.Geometry.Coordinates,
-                            Time = body.Time,
-                            Air_temperature = body.Data.Instant.Details.Air_temperature,
-                            Wind_speed = body.Data.Instant.Details.Wind_speed,
-                            Wind_from_direction = body.Data.Instant.Details.Wind_from_direction
+                            Time = responsebody.Properties.TimeSeries[i].Time,
+                            Air_temperature = responsebody.Properties.TimeSeries[i].Data.Instant.Details.Air_temperature,
+                            Wind_speed = responsebody.Properties.TimeSeries[i].Data.Instant.Details.Wind_speed,
+                            Wind_from_direction = responsebody.Properties.TimeSeries[i].Data.Instant.Details.Wind_from_direction,
+                            Symbol_code = responsebody.Properties.TimeSeries[i-1].Data.Next_1_hours?.Summary.Symbol_code
+
 
                         });
+
                     }
                 }
                 catch (HttpRequestException e)

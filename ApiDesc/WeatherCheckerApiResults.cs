@@ -13,5 +13,6 @@ namespace WeatherCheckerApi
         public double Air_temperature { get; set; }
         public double Wind_from_direction { get; set; }
         public double Wind_speed { get; set; }
+        public string Symbol_code { get; set; }
     }
 }

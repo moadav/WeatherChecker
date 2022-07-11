@@ -1,15 +1,15 @@
-﻿import React, { Component, useState,useEffect } from 'react';
+﻿import React, { Component, useState, useEffect } from 'react';
 
 
 
 
 const Search = () => {
     const [coordinates, setCoordinates] = useState({ lan: "", lon: "" });
-
+    const [values, setValues] = useState({});
 
     const handleChange = (e) => {
 
-        setCoordinates({ ...coordinates, [e.target.name]:e.target.value })
+        setCoordinates({ ...coordinates, [e.target.name]: e.target.value })
 
     }
     const handleSubmit = (event) => {
@@ -18,7 +18,7 @@ const Search = () => {
         alert('A name was submitted: ' + coordinates.lan);
 
     }
- 
+
     const request = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -31,30 +31,37 @@ const Search = () => {
                 response.json()
 
             )
-            .then(data => console.log(data));
-
-
+            .then(data => setValues(data[0][1]));
     }
     useEffect(() => {
         // Update the document title using the browser API
-        
+
     }, [coordinates]);
-       
-    
+
+
     return (
-        <form onSubmit={handleSubmit}>
-            <label>
-                lon:
-                <input type="text" name = "lon" value={coordinates.lon} onChange={handleChange} />
-            </label>
-            <label>
-                lan:
-                <input type="text" name="lan" value={coordinates.lan} onChange={handleChange} />
-            </label>
-            <input type="submit" value="Submit" />
-        </form>
+        <div>
+          
+           
+
+            <form onSubmit={handleSubmit}>
+                <label>
+                    lon:
+                    <input type="text" name="lon" value={coordinates.lon} onChange={handleChange} />
+                </label>
+                <label>
+                    lan:
+                    <input type="text" name="lan" value={coordinates.lan} onChange={handleChange} />
+                </label>
+                <input type="submit" value="Submit" />
+            </form>
+
+            <p> {values.symbol_code} </p>
+        </div>
+
+         
     );
-  
+
 };
 
 
