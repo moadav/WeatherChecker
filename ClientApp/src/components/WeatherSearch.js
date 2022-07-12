@@ -3,12 +3,12 @@ import { WeatherContentBox } from './WeatherContentBox';
 import './WeatherSearch.css';
 
 const Search = () => {
-    const [coordinates, setCoordinates] = useState({ lan: "", lon: "" });
+    const [municipality, setMunicipality] = useState("");
     const [values, setValues] = useState();
 
     const handleChange = (e) => {
 
-        setCoordinates({ ...coordinates, [e.target.name]: e.target.value })
+        setMunicipality(e.target.value)
 
     }
     const handleSubmit = (event) => {
@@ -19,7 +19,7 @@ const Search = () => {
     const request = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ coordinates })
+        body: JSON.stringify({ municipality })
     }
     const GetSearchApiResults = async () => {
         fetch('WeatherSearch', request)
@@ -37,13 +37,10 @@ const Search = () => {
            
 
             <form className="SubmitForm" onSubmit={handleSubmit}>
+ 
                 <label>
-                    lon:
-                    <input type="text" name="lon" value={coordinates.lon} onChange={handleChange} />
-                </label>
-                <label>
-                    lan:
-                    <input type="text" name="lan" value={coordinates.lan} onChange={handleChange} />
+                   KommuneNavn:
+                    <input type="text"  value={municipality} onChange={handleChange} />
                 </label>
                 <input type="submit" value="Submit" />
             </form>

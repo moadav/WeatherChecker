@@ -85,9 +85,23 @@ namespace WeatherChecker.Controllers
                 new MediaTypeWithQualityHeaderValue("application/json"));
             Client.DefaultRequestHeaders.Add("User-Agent", "Weather check application");
 
-            var CoordinatesRequest = JsonConvert.DeserializeObject<CoordinatesReact>(value.ToString());
+            var CoordinatesRequest = JsonConvert.DeserializeObject<Coord>(value.ToString());
 
-            using (HttpResponseMessage response = await Client.GetAsync($"https://api.met.no/weatherapi/locationforecast/2.0/compact.json?lat={CoordinatesRequest.Coordinates.lan}&lon={CoordinatesRequest.Coordinates.lon}"))
+            var t = false;
+
+            HttpResponseMessage response2 = await Client.GetAsync($"https://ws.geonorge.no/kommuneinfo/v1/fylkerkommuner");
+            var responsebody2 = JsonConvert.DeserializeObject<List<GetKommuneNavn>>(await response2.Content.ReadAsStringAsync());
+
+            foreach (GetKommuneNavn cord in responsebody2)
+            {
+                foreach (Kommuner kom in cord.Kommuner)
+                {
+                    if (kom.KommunenavnNorsk.ToLower().Equals(CoordinatesRequest.Municipality.ToLower()))
+                        t = true;
+                }
+              
+            }
+            using (HttpResponseMessage response = await Client.GetAsync($"https://api.met.no/weatherapi/locationforecast/2.0/compact.json?lat=22&lon=12"))
             {
                 try
                 {

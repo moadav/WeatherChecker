@@ -5,9 +5,13 @@ using System.Threading.Tasks;
 
 namespace WeatherChecker.ApiDesc
 {
-    public class Coord
+    public class Kommuner
     {
+        public string KommunenavnNorsk { get; set; }
 
-        public string Municipality { get; set; }
+        public PunktOmråde PunktIOmrade { get; set; }
+
+
+
     }
 }

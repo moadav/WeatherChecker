@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace WeatherChecker.ApiDesc
 {
-    public class Coord
+    public class PunktOmråde
     {
 
-        public string Municipality { get; set; }
+        public List<double> Coordinates { get; set; }
     }
 }

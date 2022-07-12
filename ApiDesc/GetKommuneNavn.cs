@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace WeatherChecker.ApiDesc
 {
-    public class Coord
+    public class GetKommuneNavn
     {
-
-        public string Municipality { get; set; }
+        public List<Kommuner> Kommuner { get; set; }
     }
 }
