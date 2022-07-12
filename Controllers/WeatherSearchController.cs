@@ -87,7 +87,6 @@ namespace WeatherChecker.Controllers
 
             var CoordinatesRequest = JsonConvert.DeserializeObject<Coord>(value.ToString());
 
-            var t = false;
 
             HttpResponseMessage response2 = await Client.GetAsync($"https://ws.geonorge.no/kommuneinfo/v1/fylkerkommuner");
             var responsebody2 = JsonConvert.DeserializeObject<List<GetKommuneNavn>>(await response2.Content.ReadAsStringAsync());
@@ -97,56 +96,61 @@ namespace WeatherChecker.Controllers
                 foreach (Kommuner kom in cord.Kommuner)
                 {
                     if (kom.KommunenavnNorsk.ToLower().Equals(CoordinatesRequest.Municipality.ToLower()))
-                        t = true;
+                    {
+                        string latGrammar = kom.PunktIOmrade.Coordinates[1].ToString("G", CultureInfo.InvariantCulture);
+                        string lonGrammar = kom.PunktIOmrade.Coordinates[0].ToString("G", CultureInfo.InvariantCulture);
+                        using (HttpResponseMessage response = await Client.GetAsync($"https://api.met.no/weatherapi/locationforecast/2.0/compact.json?lat={latGrammar}&lon={lonGrammar}"))
+                        {
+                            try
+                            {
+                                response.EnsureSuccessStatusCode();
+                                var responsebody = JsonConvert.DeserializeObject<Feature>(await response.Content.ReadAsStringAsync());
+
+                                //foreach (WeatherTimeseries body in responsebody.Properties.TimeSeries)
+                                //{
+                                //    WeatherResponse.Add(new WeatherCheckerApiResults
+                                //    {
+                                //        Coordinates = responsebody.Geometry.Coordinates,
+                                //        Time = body.Time,
+                                //        Air_temperature = body.Data.Instant.Details.Air_temperature,
+                                //        Wind_speed = body.Data.Instant.Details.Wind_speed,
+                                //        Wind_from_direction = body.Data.Instant.Details.Wind_from_direction
+
+                                //    });
+                                //}
+
+                                for (int i = 1; i < responsebody.Properties.TimeSeries.Count; i++)
+                                {
+
+                                    WeatherResponse.Add(new WeatherCheckerApiResults
+                                    {
+                                        Coordinates = responsebody.Geometry.Coordinates,
+                                        Time = DateTime.Parse(responsebody.Properties.TimeSeries[i].Time, CultureInfo.CurrentCulture).ToString(),
+                                        Air_temperature = responsebody.Properties.TimeSeries[i].Data.Instant.Details.Air_temperature,
+                                        Wind_speed = responsebody.Properties.TimeSeries[i].Data.Instant.Details.Wind_speed,
+                                        Wind_from_direction = responsebody.Properties.TimeSeries[i].Data.Instant.Details.Wind_from_direction,
+                                        Symbol_code = responsebody.Properties.TimeSeries[i - 1].Data.Next_1_hours?.Summary.Symbol_code
+
+
+                                    });
+
+                                }
+                            }
+                            catch (HttpRequestException e)
+                            {
+                                Console.WriteLine("error: " + e);
+                            }
+                        }
+
+                        break;
+                    }
+                        
                 }
               
             }
-            using (HttpResponseMessage response = await Client.GetAsync($"https://api.met.no/weatherapi/locationforecast/2.0/compact.json?lat=22&lon=12"))
-            {
-                try
-                {
-                    response.EnsureSuccessStatusCode();
-                    var responsebody = JsonConvert.DeserializeObject<Feature>(await response.Content.ReadAsStringAsync());
 
-                    //foreach (WeatherTimeseries body in responsebody.Properties.TimeSeries)
-                    //{
-                    //    WeatherResponse.Add(new WeatherCheckerApiResults
-                    //    {
-                    //        Coordinates = responsebody.Geometry.Coordinates,
-                    //        Time = body.Time,
-                    //        Air_temperature = body.Data.Instant.Details.Air_temperature,
-                    //        Wind_speed = body.Data.Instant.Details.Wind_speed,
-                    //        Wind_from_direction = body.Data.Instant.Details.Wind_from_direction
+            
 
-                    //    });
-                    //}
-
-                    for(int i = 1; i < responsebody.Properties.TimeSeries.Count; i++)
-                    {
-                        
-                        WeatherResponse.Add(new WeatherCheckerApiResults
-                        {
-                            Coordinates = responsebody.Geometry.Coordinates,
-                            Time = DateTime.Parse(responsebody.Properties.TimeSeries[i].Time, CultureInfo.CurrentCulture).ToString(),
-                            Air_temperature = responsebody.Properties.TimeSeries[i].Data.Instant.Details.Air_temperature,
-                            Wind_speed = responsebody.Properties.TimeSeries[i].Data.Instant.Details.Wind_speed,
-                            Wind_from_direction = responsebody.Properties.TimeSeries[i].Data.Instant.Details.Wind_from_direction,
-                            Symbol_code = responsebody.Properties.TimeSeries[i-1].Data.Next_1_hours?.Summary.Symbol_code
-
-
-                        });
-
-                    }
-                }
-                catch (HttpRequestException e)
-                {
-                    Console.WriteLine("error: " + e);
-                }
-
-
-
-
-            }
             yield return WeatherResponse;
 
 
