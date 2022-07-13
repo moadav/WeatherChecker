@@ -9,15 +9,15 @@ export class WeatherContentBox extends Component {
         super(props);
 
     }
-
+ 
     render() {
         return (
             <div className="wrapper">
-                <p>{this.props.time} </p>
-                <p>{this.props.air_temperature} </p>
-                <p>{this.props.wind_from_direction} </p>
-                <p>{this.props.wind_speed} </p>
-                <p>{this.props.symbol_code} </p>
+                <p className="weatherinfo">Time: <strong>{this.props.time} </strong></p>
+                <p className="weatherinfo">Temperature: <strong>{this.props.air_temperature}</strong> </p>
+                <p className="weatherinfo"> Wind from direction:<strong> {this.props.wind_from_direction} </strong></p>
+                <p className="weatherinfo">Wind speed: <strong>{this.props.wind_speed}</strong> </p>
+                <p className="weatherinfo"> Symbole: <strong>{this.props.symbol_code} </strong> </p>
             </div>
 
         );

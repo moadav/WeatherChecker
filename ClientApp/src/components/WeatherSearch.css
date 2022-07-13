@@ -1,4 +1,15 @@
 ﻿.SubmitForm {
-    margin-top: 10vh;
+    align-content:center;
     margin-left: 30vh;
+}
+.labetext {
+   
+    margin: auto;
+}
+.errorMessage {
+    margin-top: 20%;
+    margin: auto;
+    text-align: center;
+    color: red;
+    font-size: 20px;
 }

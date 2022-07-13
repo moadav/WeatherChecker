@@ -8,7 +8,7 @@ export class Home extends Component {
         return (
             <div>
                 <h1> Welcome to Weather Checker application </h1>
-                <p> Simple application created with react to show weather information for the future.  </p>
+                <p> Simple application created with react to show weather information for a specific municipality.  </p>
                 <p> All data is received from "Meteorologisk institutt" </p>
                 <ContentItems />
             </div>

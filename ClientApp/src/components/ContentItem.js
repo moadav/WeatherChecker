@@ -15,7 +15,7 @@ export class ContentItem extends Component {
     render() {
         return (
             <div className="frontpage">
-                <NavLink to={this.props.link} replace={true} className="test"> {this.props.name }</NavLink>
+                <NavLink to={this.props.link} replace={true} className="navlink"> {this.props.name }</NavLink>
          
                 
             </div>

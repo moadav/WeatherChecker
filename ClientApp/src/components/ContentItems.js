@@ -7,7 +7,6 @@ export class ContentItems extends Component {
     render() {
         return (
             <div >
-                <ContentItem name="Weathers" link="/weather-search"/>
                 <ContentItem name="Check Weatcher" link="/weather-search" />
             </div>
 
