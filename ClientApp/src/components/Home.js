@@ -9,7 +9,7 @@ export class Home extends Component {
             <div>
                 <h1> Welcome to Weather Checker application </h1>
                 <p> Simple application created with react to show weather information for a specific municipality.  </p>
-                <p> All data is received from "Meteorologisk institutt" </p>
+                <p> All data is received from "Meteorologisk institutt" and ws.geonorge.no </p>
                 <ContentItems />
             </div>
 
